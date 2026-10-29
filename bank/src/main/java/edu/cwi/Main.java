@@ -3,6 +3,7 @@ package edu.cwi;
 
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,6 +16,12 @@ public class Main {
 
             config.routes.get("/logout", ctx -> {
                 ctx.redirect("/");
+            });
+
+            config.routes.apiBuilder(() -> {
+                path("/transactions", () -> {
+                    crud("{id}", new TransactionsController());
+                });
             });
         }).start(7070);
     }
