@@ -4,10 +4,13 @@ package edu.cwi;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import static io.javalin.apibuilder.ApiBuilder.*;
+import io.javalin.rendering.template.JavalinJte;
 
 public class Main {
     public static void main(String[] args) {
         Javalin.create(config -> {
+            config.fileRenderer(new JavalinJte());
+            
             config.staticFiles.add("/public", Location.CLASSPATH);
 
             config.routes.post("/account", ctx -> {
