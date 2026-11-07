@@ -1,0 +1,20 @@
+
+@param String title
+@param gg.jte.Content account
+@param gg.jte.Content detail
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>${title}</title>
+    </head>
+    <body>
+        <h1>${title}</h1>
+
+        ${account}
+
+        ${detail}
+    </body>
+</html>

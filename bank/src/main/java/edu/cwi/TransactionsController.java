@@ -17,7 +17,16 @@ public class TransactionsController implements CrudHandler {
 
     @Override
     public void getAll(Context ctx) {
-        ctx.render("jte/transactionsPage.jte", Map.of("transactions", transactions));
+        UserAccount account = new UserAccount(
+            "Test User",
+            1250.50,
+            transactions
+        );
+
+        ctx.render("jte/accountPage.jte", Map.of(
+            "title", "Account Overview",
+            "account", account
+        ));
     }
 
     @Override
