@@ -1,4 +1,3 @@
-
 @param String title
 @param gg.jte.Content account
 @param gg.jte.Content detail
@@ -16,5 +15,6 @@
         ${account}
 
         ${detail}
+        <a href="/logout">Log Out</a>
     </body>
 </html>

@@ -1,4 +1,3 @@
-
 package edu.cwi;
 
 import java.util.Map;
@@ -6,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
+
 import static j2html.TagCreator.body;
 import static j2html.TagCreator.h1;
 import static j2html.TagCreator.html;
@@ -18,7 +18,9 @@ public class TransactionsController implements CrudHandler {
     @Override
     public void getAll(Context ctx) {
         UserAccount account = new UserAccount(
+            "test-user",
             "Test User",
+            AppRole.CUSTOMER,
             1250.50,
             transactions
         );
