@@ -2,8 +2,10 @@
 package edu.cwi;
 
 import io.javalin.Javalin;
+import static io.javalin.apibuilder.ApiBuilder.crud;
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
 import io.javalin.http.staticfiles.Location;
-import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,7 +22,11 @@ public class Main {
 
             config.routes.apiBuilder(() -> {
                 path("/transactions", () -> {
-                    crud("{id}", new TransactionsController());
+                    TransactionsController controller = new TransactionsController();
+
+                    crud("{id}", controller);
+                    post("/update", controller::updateForm);
+                    post("/delete", controller::deleteForm);
                 });
             });
         }).start(7070);

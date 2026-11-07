@@ -1,11 +1,21 @@
-
 package edu.cwi;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
-import static j2html.TagCreator.*;
+import static j2html.TagCreator.body;
+import static j2html.TagCreator.button;
+import static j2html.TagCreator.each;
+import static j2html.TagCreator.form;
+import static j2html.TagCreator.h1;
+import static j2html.TagCreator.h2;
+import static j2html.TagCreator.html;
+import static j2html.TagCreator.input;
+import static j2html.TagCreator.li;
+import static j2html.TagCreator.p;
+import static j2html.TagCreator.ul;
 
 public class TransactionsController implements CrudHandler {
 
@@ -16,7 +26,40 @@ public class TransactionsController implements CrudHandler {
         ctx.html(
             html(
                 body(
-                    h1("All Transactions")
+                    h1("All Transactions"),
+                    ul(
+                        each(transactions.entrySet(), entry ->
+                            li(entry.getKey() + ": " + entry.getValue())
+                        )
+                    ),
+
+                    h2("Create Transaction"),
+                    form()
+                        .withMethod("post")
+                        .withAction("/transactions")
+                        .with(
+                            input().withName("transaction"),
+                            button("Create").withType("submit")
+                        ),
+
+                    h2("Update Transaction"),
+                    form()
+                        .withMethod("post")
+                        .withAction("/transactions/update")
+                        .with(
+                            input().withName("id").withPlaceholder("Transaction ID"),
+                            input().withName("transaction").withPlaceholder("New value"),
+                            button("Update").withType("submit")
+                        ),
+
+                    h2("Delete Transaction"),
+                    form()
+                        .withMethod("post")
+                        .withAction("/transactions/delete")
+                        .with(
+                            input().withName("id").withPlaceholder("Transaction ID"),
+                            button("Delete").withType("submit")
+                        )
                 )
             ).render()
         );
@@ -42,12 +85,11 @@ public class TransactionsController implements CrudHandler {
 
     @Override
     public void create(Context ctx) {
-        String body = ctx.body();
+        String transaction = ctx.formParam("transaction");
         String id = String.valueOf(transactions.size() + 1);
 
-        transactions.put(id, body);
-
-        getAll(ctx);
+        transactions.put(id, transaction);
+        ctx.redirect("/transactions");
     }
 
     @Override
@@ -64,5 +106,24 @@ public class TransactionsController implements CrudHandler {
     public void delete(Context ctx, String resourceId) {
         transactions.remove(resourceId);
         getAll(ctx);
+    }
+
+    public void updateForm(Context ctx) {
+        String id = ctx.formParam("id");
+        String transaction = ctx.formParam("transaction");
+
+        if (transactions.containsKey(id)) {
+            transactions.put(id, transaction);
+            ctx.redirect("/transactions");
+        } else {
+            ctx.status(404).result("Transaction not found");
+        }
+    }
+
+    public void deleteForm(Context ctx) {
+        String id = ctx.formParam("id");
+
+        transactions.remove(id);
+        ctx.redirect("/transactions");
     }
 }
